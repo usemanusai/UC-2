@@ -42,10 +42,19 @@ class CleanupDaemon(threading.Thread):
                 if entry.is_dir() and entry.name.startswith("session_"):
                     age = now - os.path.getmtime(entry.path)
                     if age > self.max_session_age:
-                        # Before removing directory, ensure no process holds it
+                        # Before removing directory, kill any Chrome that has this
+                        # profile path in its --user-data-dir argument.
                         try:
-                            from engine.kernel.browser_factory import _kill_chrome_processes_for_profile
-                            _kill_chrome_processes_for_profile(entry.path)
+                            for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                                try:
+                                    name = proc.info.get('name') or ''
+                                    if 'chrome' in name.lower() or 'chromium' in name.lower():
+                                        cmdline = proc.info.get('cmdline') or []
+                                        if any(entry.path in arg for arg in cmdline):
+                                            proc.kill()
+                                            logger.info(f"CleanupDaemon killed Chrome PID {proc.pid} using stale profile.")
+                                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                                    pass
                         except Exception as ke:
                             logger.warning(f"Failed to kill processes for {entry.path}: {ke}")
 
