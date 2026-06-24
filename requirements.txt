@@ -1,0 +1,19 @@
+selenium
+webdriver-manager
+requests
+undetected-chromedriver
+colorama
+pyautogui
+Pillow
+chromedriver-autoinstaller
+nest-asyncio
+httpx
+numpy
+scipy
+z3-solver
+cryptography
+argon2-cffi
+pywin32; sys_platform == 'win32'
+gudhi
+umap-learn
+scikit-learn
