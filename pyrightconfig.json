@@ -1,0 +1,15 @@
+{
+  "pythonVersion": "3.13",
+  "pythonPlatform": "Windows",
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": ["."],
+  "typeCheckingMode": "basic",
+  "reportMissingModuleSource": "none",
+  "reportMissingImports": "warning",
+  "exclude": [
+    "discovery_squad/.venv/**",
+    "agents/**/.venv/**",
+    "scratch/**"
+  ]
+}

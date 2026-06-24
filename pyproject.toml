@@ -1,0 +1,10 @@
+[tool.pyright]
+pythonVersion = "3.13"
+pythonPlatform = "Windows"
+venvPath = "."
+venv = ".venv"
+# Treat the project root as the import root so `engine.*`, `ai_captcha.*`, etc. resolve correctly
+extraPaths = ["."]
+typeCheckingMode = "basic"
+reportMissingModuleSource = "none"
+reportMissingImports = "warning"
