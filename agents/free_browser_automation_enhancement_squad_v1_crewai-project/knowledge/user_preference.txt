@@ -1,0 +1,52 @@
+## Project Context
+The user is building and maintaining UC (Undetected Checker), a production-grade multi-account credential validator. It uses Undetected ChromeDriver, human-mimicking behavioral jitter, rektCaptcha auto-solving, and a Tkinter GUI.
+
+## User Technical Preferences
+The user is an advanced Python developer working on stealth browser automation and anti-bot evasion systems.
+
+## Code Style & Architecture
+- Language: Python 3.13+
+- GUI: Tkinter (multi-tab, dark theme)
+- Browser: Undetected ChromeDriver attached to headed Chrome via randomized debug ports
+- Concurrency: threading.Thread per account, ThreadPoolExecutor for batch tasks
+- Database: SQLite via aiosqlite (async) and direct sqlite3 for synchronous read paths
+- Logging: Python logging module with rotating file handlers; runtime_logs.txt tee'd to GUI
+
+## Core Design Principles the User Cares About
+1. **Zero bot-detection footprint**: Every browser fingerprint must be unique per session. HWID rotation, Tsallis entropy validation, randomized UA strings.
+2. **Resilient fallback chain**: CSS selectors → heuristic dictionary (80+ patterns) → CDP AI self-discovery. Never hard-code selectors.
+3. **Stealth-first**: Langevin trajectory for cursor drift, Gaussian WPM typing, Cubic Bézier mouse paths. No robotic straight-line actions.
+4. **Profile isolation**: Fresh locked temp directory per account run. No cross-session cookie bleed.
+5. **Graceful degradation**: Always handle captcha failures, port conflicts, and zombie Chrome processes without crashing the session.
+6. **Session integrity**: Sessions must be validated cryptographically (TPM 2.0 / DPAPI) and each account gets its own debug port + profile.
+
+## Technology Stack
+- Playwright (CDP) for AI-assisted selector discovery alongside Selenium
+- CrewAI squads (explorer/analyst/verifier) for automated UI discovery
+- Claude proxy bridge (local HTTP server) for AI captcha fallback
+- rektCaptcha, Moodle, Shaparak Chrome extension solvers
+- AntiCaptcha, CapSolver, 2Captcha APIs as fallback layers
+- Telegram Bot for real-time result reporting
+- OpenRouter API for AI model routing
+
+## What the User Wants Agents to Prioritize
+- When analyzing a target login form: first run the 3-tier CSS locator, then run CrewAI discovery squad only as a last resort
+- Prefer in-process captcha solving (rektCaptcha extension) over paid API services
+- Never open more Chrome instances than the configured thread count
+- Always clean up zombie Chrome processes and orphaned temp profiles on exit
+- Report results to Telegram with 4000-character safety clamping
+
+## Output Format Preferences
+- Results stored in: valid.txt, invalid.txt, error.txt, free.txt (per account category)
+- CSV export for telemetry via engine/reporting/csv_exporter.py
+- Captcha stats tracked in engine/registry/captcha_stats.py (thread-safe singleton)
+
+## Project File Map (Key Entry Points)
+- validator_pro_v2.py — Main Tkinter GUI + orchestration entry point
+- engine/kernel/browser_factory.py — Chrome spawning, retry logic, profile seeding
+- engine/kernel/heuristics.py — 80+ CSS heuristic fallback dictionary
+- engine/kernel/math_engine/ — Entropy, crypto, Langevin, TDA, verification
+- engine/core/discovery_bridge.py — CDP + CrewAI bridge for AI selector discovery
+- engine/registry/captcha_stats.py — CaptchaStatsManager singleton
+- ai_captcha/claude_proxy_bridge.py — Local Claude HTTP proxy for AI captcha solving
+- main_interface.py — CLI entrypoint alternative to GUI

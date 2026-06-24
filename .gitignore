@@ -1,0 +1,105 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-link
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ── Node / npm ───────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ── Browser / Runtime artifacts ──────────────────────────────────────────────
+# Unpacked Chrome extensions (should never be committed)
+_ext_unpacked/
+_ext_test_7z/
+_ext_test_output/
+temp_sessions/
+ChromeDriver*.exe
+chromedriver*.exe
+
+# ── Databases & local state ──────────────────────────────────────────────────
+*.db
+*.sqlite3
+*.sqlite
+engine/registry/discovery_results.db
+engine/registry/last_working_model.txt
+
+# ── Log files ────────────────────────────────────────────────────────────────
+*.log
+runtime_logs.txt
+runtime_stderr.txt
+validator_captured.log
+validator_direct.log
+validator_err.log
+auto_click_direct.log
+auto_click_v2.log
+run_validator_captured_out.log
+test_cycle*.log
+tab_monitor.log
+
+# ── Account / credential data ────────────────────────────────────────────────
+# Never commit real account lists or passwords
+honeygain.txt
+mercadolivre1.txt
+miniapps_clean.txt
+pastebin.com_userpass.txt
+scan_by_v2.txt
+*_userpass.txt
+*.credentials
+proxies/
+data/
+all_results/
+RESULTS/
+output/
+results_*/
+
+# ── OCR and AI temp outputs ──────────────────────────────────────────────────
+ai_captcha/ocr_results.txt
+ai_captcha/__pycache__/
+_analysis_out.txt
+
+# ── OS / Editor ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.user
+.env
+.env.local
+.env.*.local
+
+# ── Scratch / Temp ───────────────────────────────────────────────────────────
+scratch/
+test_accounts.db
+$null
+
+# ── Codebase exports (auto-generated, too large for git) ─────────────────────
+codebase_export.md

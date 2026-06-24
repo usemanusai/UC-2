@@ -1,0 +1,55 @@
+## Project: UC — Undetected Checker Discovery Squad
+
+The user runs an automated UI discovery pipeline that finds login form CSS selectors on new target websites without manual intervention. This squad feeds selector data into the main validator_pro_v2.py pipeline.
+
+## Discovery Squad Role & Goals
+The discovery squad is a CrewAI multi-agent team with three roles:
+1. **Explorer Agent** — Headlessly loads the target URL, screenshots each page state, lists all interactive form elements
+2. **Analyst Agent** — Scores candidate selectors by stability (ID > data-attr > class > XPath), filters out dynamic class names, ranks by confidence
+3. **Verifier Agent** — Replays selected selectors with a real credential pair in a sandboxed Chrome session, confirms the full login flow completes without error
+
+## User's Discovery Preferences
+- **Target selector types** (in priority order): `id` attributes > `name` attributes > `data-*` attributes > stable CSS classes > aria-labels > XPath as last resort
+- **Reject dynamic selectors**: Any class containing hashes, random tokens, or numeric suffixes (e.g. `btn-a3f7`, `_abc123`) must be discarded
+- **Multi-step forms**: Must detect and traverse paginated login flows (username → continue → password → submit)
+- **Shadow DOM**: Must pierce shadow roots when the login form is inside a web component
+- **iFrame forms**: Must detect iframe-embedded login forms and switch context automatically
+- **CAPTCHA detection**: If a CAPTCHA appears during discovery, pause and log the CAPTCHA type, do NOT attempt to solve — report back to the validator for captcha solver handoff
+- **Stability score threshold**: Only accept selectors with confidence ≥ 0.75 (out of 1.0)
+
+## Output Format the User Expects
+Results must be written to `engine/registry/` as a JSON discovery record with these fields:
+```json
+{
+  "target_url": "https://example.com/login",
+  "discovered_at": "ISO-8601 timestamp",
+  "username_selector": "input[name='email']",
+  "password_selector": "input[type='password']",
+  "submit_selector": "button[type='submit']",
+  "confidence": 0.92,
+  "captcha_detected": false,
+  "captcha_type": null,
+  "requires_multi_step": false,
+  "notes": "Standard single-page login form, no iframe"
+}
+```
+
+## Chrome Profile Settings for Discovery Sessions
+- Always use a fresh isolated temp profile (never reuse a validated account's profile)
+- Load rektCaptcha extension for passive captcha solving during verification
+- Set window size to 1366x768 (most common desktop viewport for avoiding mobile-redirect detection)
+- Set random but realistic User-Agent (desktop Chrome on Windows 10/11)
+- Enable stealth mode: disable `navigator.webdriver`, spoof `chrome.runtime`, randomize canvas fingerprint
+
+## Integration with Validator
+- Discovery results feed directly into `engine/core/discovery_bridge.py`
+- The bridge converts JSON discovery records into the internal `DiscoverySchema` dataclass used by `browser_factory.py`
+- On validation runs, the discovery results take **lower priority** than explicit user-configured selectors from the GUI
+- If an explicit selector fails, the system falls back to the most recent discovery record for that target URL
+
+## Coding Standards for This Squad
+- Python 3.13+ with full type annotations
+- All file I/O must be atomic (write to temp file, then os.replace) to prevent corruption on crash
+- Thread-safe access to shared discovery_results.db using asyncio.Lock + aiosqlite
+- Never use `time.sleep()` — always use async `asyncio.sleep()` or `threading.Event.wait(timeout=)`
+- Log every selector attempt with selector string, confidence score, and failure reason if rejected
