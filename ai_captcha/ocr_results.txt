@@ -1,0 +1,42 @@
+================================================================================
+CAPTCHA OCR Diagnostic
+================================================================================
+Image path: C:\Users\LENOVO~1\AppData\Local\Temp\captcha_manual_solve.png
+Image exists: True
+Image shape: (30, 120, 3)
+Gray shape: (30, 120)
+Gray min: 12, max: 255
+
+================================================================================
+TEST 1: Original Image
+================================================================================
+Error: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+================================================================================
+TEST 2: Grayscale
+================================================================================
+Error: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+================================================================================
+TEST 3: Binary Threshold (127)
+================================================================================
+Error: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+================================================================================
+TEST 4: Otsu Threshold
+================================================================================
+Error: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+================================================================================
+TEST 5: Upscaled 3x
+================================================================================
+Error: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+================================================================================
+TEST 6: Adaptive Threshold
+================================================================================
+Error: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+================================================================================
+DONE
+================================================================================
